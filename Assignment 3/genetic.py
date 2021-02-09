@@ -30,6 +30,11 @@ This represents the following board:
             don't mutate
         else:
             mutate the character at that index to a random number between 0 and 7
+            
+   rn = random.randit(0,8)
+   if (rn = 8):
+   else:
+            
 5. Check the fitness of all the states:
     if optimal solution found:
         stop
