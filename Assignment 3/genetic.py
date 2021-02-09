@@ -64,9 +64,9 @@ def crossover(genes_string):
         genes_string[i+1] = temp2
         print(genes_string[i])
         print(genes_string[i+1])
-
+        print("index:", i)
         i += 1
-
+        print("index:", i)
 
 def mutation(genes_string):
     # run for each gene string
