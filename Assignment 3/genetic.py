@@ -1,4 +1,5 @@
 from board import Board
+import copy
 '''
 ########### Genetic Algorithm#####################
 Encoding: the board is encoded as a string
@@ -41,3 +42,29 @@ This represents the following board:
     else:
         go back to stage 2 and repeat process.
 '''
+NUM_GENES = 8
+NUM_QUEENS = 5
+NUM_Pairs = 10
+
+
+def crossover():
+    pass
+
+
+def mutation():
+    pass
+
+
+def selection():
+    pass
+
+
+def genetic():
+    # create the 8 genes
+    genes = []
+    for i in range(NUM_GENES):
+        genes.append(Board(NUM_QUEENS))
+        genes[i].fitness()
+
+
+genetic()
