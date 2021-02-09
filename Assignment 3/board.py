@@ -1,7 +1,6 @@
 import random
 import numpy as np
 
-""
 
 class Board:
     def __init__(self, n):
@@ -41,11 +40,25 @@ class Board:
     def get_fit(self):
         return self.fit
 
+    def __str__(self):
+        full_str = ' '
+        for elem in self.map:
+            pos = 0
+            result = list(elem)
+            # print(result)
+            pos = result.index(1)
+            pos += 1
+            full_str += str(pos)
+
+        # print('Pos is ')
+
+        #  print(pos)
+        return full_str
+
 
 if __name__ == '__main__':
     test = Board(5)
     test.fitness()
-    # test.show()
-    print(type(test.get_map()))
-    print(type(1))
+    test.show()
+    print(test)
 
