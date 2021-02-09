@@ -48,7 +48,7 @@ NUM_PAIRS = 10
 
 
 def crossover(genes_string):
-    for i in range(len(genes_string)-1):
+    for i in range(0, len(genes_string), 2):
         str1 = ""
         rn = random.randint(0, len(genes_string))
         # leftover = len(genes_String) - rn
@@ -64,9 +64,7 @@ def crossover(genes_string):
         genes_string[i+1] = temp2
         print(genes_string[i])
         print(genes_string[i+1])
-        print("index:", i)
-        i += 1
-        print("index:", i)
+        print("index:", i, (i+1))
 
 def mutation(genes_string):
     # run for each gene string
