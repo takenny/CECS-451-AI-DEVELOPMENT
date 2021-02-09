@@ -1,4 +1,5 @@
 from board import Board
+import random
 import copy
 '''
 ########### Genetic Algorithm#####################
@@ -47,7 +48,7 @@ NUM_QUEENS = 5
 NUM_Pairs = 10
 
 
-def crossover():
+def crossover(genes):
     pass
 
 
@@ -62,9 +63,29 @@ def selection():
 def genetic():
     # create the 8 genes
     genes = []
+    genes_string = []
+    solution_index = 10
+    solution_found = False
     for i in range(NUM_GENES):
         genes.append(Board(NUM_QUEENS))
         genes[i].fitness()
+
+    # Repeat the process until the solution is found
+    while not solution_found:
+        crossover(genes)
+        for gene in genes:
+            genes_string.append(gene.__str__())
+        print(genes_string)
+        crossover(genes_string)
+        mutation(genes_string)
+        for i in range(NUM_GENES):
+            genes[i].set_map(genes_string[i])
+            genes[i].fitness()
+            if genes[i].get_fit() == 0:
+                solution_found = True
+                solution_index = i
+
+    genes[solution_index].show()
 
 
 genetic()

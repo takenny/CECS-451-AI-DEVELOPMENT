@@ -13,6 +13,7 @@ class Board:
             self.map[i][j] = 1
 
     def fitness(self):
+        self.fit = 0
         for i in range(self.n_queen):
             for j in range(self.n_queen):
                 if self.map[i][j] == 1:
