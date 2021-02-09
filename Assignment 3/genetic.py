@@ -52,15 +52,21 @@ def crossover(genes):
 
 
 def mutation(genes_string):
-    # run the for each gene string
+    # run for each gene string
     for i in range(len(genes_string)):
+        # convert string to list
         s = list(genes_string[i])
         genes_string[i] = ""
+
+        # Generate random numbers for the index and  the number in that index
+        # rn is the random index. if index is 0 then no character is changed
+        # ran is the number that is written to the random index
         rn = random.randint(0, NUM_QUEENS-1)
         ran = random.randint(0, NUM_QUEENS)
-        # print( rn, ran)
         if rn != 0:
             s[rn] = ran
+
+        # convert back into a string and put it back into genes_string
         for character in s:
             genes_string[i] += str(character)
 
@@ -82,20 +88,32 @@ def genetic():
     # Repeat the process until the solution is found
     while not solution_found:
         crossover(genes)
+
+        # clear the genes_string if there is strings in there
+        # the array will continue to grow
+        genes_string.clear()
+
+        # convert boards to strings and place them in genes_string
+        # this array is used for the crossover and mutation function
         for gene in genes:
             genes_string.append(gene.__str__())
-        print(genes_string)
+
         crossover(genes_string)
-        mutation(genes_string)
-        print("new gene strings:", genes_string)
+
+        # convert the strings back into boards and generate their fitness
         for i in range(NUM_GENES):
             genes[i].set_map(genes_string[i])
             genes[i].fitness()
+
+            # For each board check if the solution is found,
+            # If the solution is found then we can stop looking
             if genes[i].get_fit() == 0:
                 solution_found = True
                 solution_index = i
                 break
-    print("Solution found: ", solution_index)
+
+    # Print the solution
+    print("Solution found at index: ", solution_index)
     genes[solution_index].show()
 
 

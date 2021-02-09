@@ -34,30 +34,52 @@ NUM_QUEENS = 5
 
 
 def hill():
+    # create a random initial state and its fitness
     current_state = Board(NUM_QUEENS)
     current_state.fitness()
-    # current_state.show()
+
+    # used to check if a solution is found
+    # solution not found, but there are no successors with a better fitness
     local_min = False
+    # solution found
     global_min = False
 
-    while not global_min and not local_min:
+    # loop until solution found
+    while not global_min:
+        # go though each row in the board
         for i in range(NUM_QUEENS):
+            # if the current state is the solution, we can stop
             if current_state.get_fit() == 0:
                 global_min = True
-            if global_min or local_min:
                 break
+
+            # if current state is a local min, then generate a new board
+            if local_min:
+                current_state = Board(NUM_QUEENS)
+                current_state.fitness()
+
+            # make a copy of the current state
             next_state = copy.deepcopy(current_state)
+
+            # make the row all zeros
             next_state.get_map()[i] = [0]*NUM_QUEENS
+            # if no successor is chosen this will remain true
             local_min = True
+
+            # put the queen in different positions in the board and check fitness
             for j in range(NUM_QUEENS):
                 next_state.flip(i, j)
                 next_state.fitness()
+
+                # if successor fitness is lower than current state fitness, make that the new current state
                 if next_state.get_fit() < current_state.get_fit():
                     current_state = copy.deepcopy(next_state)
-    if local_min:
-        hill()
-    elif global_min:
-        current_state.show()
+                    local_min = False
+                next_state.flip(i, j)
+
+    # Print solution
+    print("Solution found:")
+    current_state.show()
 
 
 hill()
