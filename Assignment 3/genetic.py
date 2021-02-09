@@ -47,8 +47,25 @@ NUM_QUEENS = 5
 NUM_PAIRS = 10
 
 
-def crossover(genes):
-    pass
+def crossover(genes_string):
+    for i in range(len(genes_string)-1):
+        str1 = ""
+        rn = random.randint(0, len(genes_string))
+        # leftover = len(genes_String) - rn
+        str1 = genes_string[i]  # getting the firest string
+        print(str1)
+        temp = str1[0:rn]
+        print(temp)
+        # grabs the string from 0 to split point
+        temp2 = str1[rn:len(str1)]
+
+        # grabs the string from split point to end
+        genes_string[i] = temp
+        genes_string[i+1] = temp2
+        print(genes_string[i])
+        print(genes_string[i+1])
+
+        i += 1
 
 
 def mutation(genes_string):
@@ -71,7 +88,7 @@ def mutation(genes_string):
             genes_string[i] += str(character)
 
 
-def selection():
+def selection(genes):
     pass
 
 
@@ -87,7 +104,7 @@ def genetic():
 
     # Repeat the process until the solution is found
     while not solution_found:
-        crossover(genes)
+        selection(genes)
 
         # clear the genes_string if there is strings in there
         # the array will continue to grow
