@@ -45,15 +45,16 @@ class Board:
         for elem in self.map:
             pos = 0
             result = list(elem)
-            # print(result)
             pos = result.index(1)
             pos += 1
             full_str += str(pos)
-
-        # print('Pos is ')
-
-        #  print(pos)
         return full_str
+
+    def set_map(self, gene):
+        for i in range(self.n_queen):
+            self.map[i] = [0] * 5
+            self.flip(i, int(gene[i]) - 1)
+        print(self.map)
 
 
 if __name__ == '__main__':
