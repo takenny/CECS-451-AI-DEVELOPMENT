@@ -1,6 +1,5 @@
 from board import Board
 import random
-import copy
 '''
 ########### Genetic Algorithm#####################
 Encoding: the board is encoded as a string
@@ -45,15 +44,25 @@ This represents the following board:
 '''
 NUM_GENES = 8
 NUM_QUEENS = 5
-NUM_Pairs = 10
+NUM_PAIRS = 10
 
 
 def crossover(genes):
     pass
 
 
-def mutation():
-    pass
+def mutation(genes_string):
+    # run the for each gene string
+    for i in range(len(genes_string)):
+        s = list(genes_string[i])
+        genes_string[i] = ""
+        rn = random.randint(0, NUM_QUEENS-1)
+        ran = random.randint(0, NUM_QUEENS)
+        # print( rn, ran)
+        if rn != 0:
+            s[rn] = ran
+        for character in s:
+            genes_string[i] += str(character)
 
 
 def selection():
@@ -78,13 +87,15 @@ def genetic():
         print(genes_string)
         crossover(genes_string)
         mutation(genes_string)
+        print("new gene strings:", genes_string)
         for i in range(NUM_GENES):
             genes[i].set_map(genes_string[i])
             genes[i].fitness()
             if genes[i].get_fit() == 0:
                 solution_found = True
                 solution_index = i
-
+                break
+    print("Solution found: ", solution_index)
     genes[solution_index].show()
 
 

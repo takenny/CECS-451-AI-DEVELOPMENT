@@ -42,7 +42,7 @@ class Board:
         return self.fit
 
     def __str__(self):
-        full_str = ' '
+        full_str = ''
         for elem in self.map:
             pos = 0
             result = list(elem)
@@ -55,7 +55,6 @@ class Board:
         for i in range(self.n_queen):
             self.map[i] = [0] * 5
             self.flip(i, int(gene[i]) - 1)
-        print(self.map)
 
 
 if __name__ == '__main__':
@@ -63,4 +62,3 @@ if __name__ == '__main__':
     test.fitness()
     test.show()
     print(test)
-
