@@ -1,6 +1,7 @@
 import random
 import numpy as np
 
+""
 
 class Board:
     def __init__(self, n):
@@ -44,5 +45,7 @@ class Board:
 if __name__ == '__main__':
     test = Board(5)
     test.fitness()
-    test.show()
+    # test.show()
+    print(type(test.get_map()))
+    print(type(1))
 

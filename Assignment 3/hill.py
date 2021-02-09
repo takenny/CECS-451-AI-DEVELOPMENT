@@ -29,3 +29,19 @@ hill-climbing:
                 else:
                     state with lowest fitness is new current state
 '''
+NUM_QUEENS = 5
+
+
+def hill():
+    current_state = Board(NUM_QUEENS)
+    current_state.fitness()
+    current_state.show()
+    local_min = False
+    global_min = False
+
+    while not global_min and not local_min:
+        for i in range(NUM_QUEENS):
+            print("stuff")
+
+
+hill()

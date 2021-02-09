@@ -20,7 +20,7 @@ This represents the following board:
     - Selection % of state = fitness of state / sum of fitness of states
     - the selection function is a cdf function...
         - generate a random number to choose the state using cdf
-    - for each state run this algorithm
+    - for each state run this function
 3. crossover
     - randomly choose a split point
         - swap the second half of each pair of genes
