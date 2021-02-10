@@ -2,6 +2,8 @@ from board import Board
 import random
 import numpy as np
 import copy
+import time
+
 '''
 ########### Genetic Algorithm#####################
 Encoding: the board is encoded as a string
@@ -33,11 +35,11 @@ This represents the following board:
             don't mutate
         else:
             mutate the character at that index to a random number between 0 and 7
-            
+
    rn = random.randit(0,8)
    if (rn = 8):
    else:
-            
+
 5. Check the fitness of all the states:
     if optimal solution found:
         stop
@@ -47,6 +49,7 @@ This represents the following board:
 NUM_GENES = 8
 NUM_QUEENS = 5
 NUM_PAIRS = 10
+START_TIME = time.time()
 
 
 def crossover(genes_string):
@@ -56,14 +59,14 @@ def crossover(genes_string):
         # leftover = len(genes_String) - rn
         if rn != 0:
             str1 = genes_string[i]  # getting the first string
-            str2 = genes_string[i+1]
+            str2 = genes_string[i + 1]
             temp1 = [str1[0:rn], str1[rn:len(str1)]]
             temp2 = [str2[0:rn], str2[rn:len(str2)]]
             temp1[1], temp2[1] = temp2[1], temp1[1]
 
             # grabs the string from split point to end
             genes_string[i] = ''.join(temp1)
-            genes_string[i+1] = ''.join(temp2)
+            genes_string[i + 1] = ''.join(temp2)
 
 
 def mutation(genes_string):
@@ -76,7 +79,7 @@ def mutation(genes_string):
         # Generate random numbers for the index and  the number in that index
         # rn is the random index. if index is 0 then no character is changed
         # ran is the number that is written to the random index
-        rn = random.randint(0, NUM_QUEENS-1)
+        rn = random.randint(0, NUM_QUEENS - 1)
         ran = random.randint(0, NUM_QUEENS)
         if rn != 0:
             s[rn] = ran
@@ -97,7 +100,7 @@ def selection(genes):
         fit_sum += fit
         gene_fitness.append(fit)
     for i in range(len(gene_fitness)):
-        gene_fitness[i] = gene_fitness[i]/fit_sum
+        gene_fitness[i] = gene_fitness[i] / fit_sum
         # print(genes[i], genes[i].get_fit(), gene_fitness[i])
     cdf = np.cumsum(gene_fitness)
     for i in range(len(genes)):
@@ -157,7 +160,8 @@ def genetic():
                 break
 
     # Print the solution
-    print("Solution found at index: ", solution_index)
+    run_time = round((time.time() - START_TIME) * 1000, 2)
+    print("Runtime: %3.2fms" % run_time)
     genes[solution_index].show()
 
 

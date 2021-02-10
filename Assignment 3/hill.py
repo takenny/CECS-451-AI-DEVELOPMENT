@@ -1,5 +1,6 @@
 from board import Board
 import copy
+import time
 '''
 ############## Hill Climbing ###############
 1. Initialize at random state.
@@ -31,12 +32,14 @@ hill-climbing:
                     state with lowest fitness is new current state
 '''
 NUM_QUEENS = 5
+START_TIME = time.time()
 
 
 def hill():
     # create a random initial state and its fitness
     current_state = Board(NUM_QUEENS)
     current_state.fitness()
+    random_restart = 0
 
     # used to check if a solution is found
     # solution not found, but there are no successors with a better fitness
@@ -57,6 +60,7 @@ def hill():
             if local_min:
                 current_state = Board(NUM_QUEENS)
                 current_state.fitness()
+                random_restart += 1
 
             # make a copy of the current state
             next_state = copy.deepcopy(current_state)
@@ -78,7 +82,9 @@ def hill():
                 next_state.flip(i, j)
 
     # Print solution
-    print("Solution found:")
+    run_time = round((time.time() - START_TIME)*1000, 2)
+    print("Run time: %2.2fms" % run_time)
+    print("# of random restart:", random_restart)
     current_state.show()
 
 
