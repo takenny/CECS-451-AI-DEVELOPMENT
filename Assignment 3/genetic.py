@@ -1,5 +1,7 @@
 from board import Board
 import random
+import numpy as np
+import copy
 '''
 ########### Genetic Algorithm#####################
 Encoding: the board is encoded as a string
@@ -55,18 +57,13 @@ def crossover(genes_string):
         if rn != 0:
             str1 = genes_string[i]  # getting the first string
             str2 = genes_string[i+1]
-            print("str1:", str1)
             temp1 = [str1[0:rn], str1[rn:len(str1)]]
             temp2 = [str2[0:rn], str2[rn:len(str2)]]
             temp1[1], temp2[1] = temp2[1], temp1[1]
-            print("temps:", rn, temp1, temp2)
 
             # grabs the string from split point to end
             genes_string[i] = ''.join(temp1)
             genes_string[i+1] = ''.join(temp2)
-            print("genes_string[i]:", genes_string[i])
-            print("genes_string[i+1]:", genes_string[i+1])
-            print("index:", i, (i+1))
 
 
 def mutation(genes_string):
@@ -90,7 +87,30 @@ def mutation(genes_string):
 
 
 def selection(genes):
-    pass
+    gene_fitness = []
+    genes_temp = []
+    fit_sum = 0
+    # for gene in genes:
+    #   print("og", gene, gene.get_fit())
+    for gene in genes:
+        fit = NUM_PAIRS - gene.get_fit()
+        fit_sum += fit
+        gene_fitness.append(fit)
+    for i in range(len(gene_fitness)):
+        gene_fitness[i] = gene_fitness[i]/fit_sum
+        # print(genes[i], genes[i].get_fit(), gene_fitness[i])
+    cdf = np.cumsum(gene_fitness)
+    for i in range(len(genes)):
+        rn = random.random()
+        for j in range(len(cdf)):
+            if rn < cdf[j]:
+                genes_temp.append(copy.deepcopy(genes[j]))
+                # print(rn, genes[j], cdf)
+                break
+    for i in range(len(genes)):
+        genes[i] = copy.deepcopy(genes_temp[i])
+    # for gene in genes:
+    #    print("new", gene)
 
 
 def genetic():
@@ -107,6 +127,12 @@ def genetic():
     while not solution_found:
         selection(genes)
 
+        for i in range(len(genes)):
+            if genes[i].get_fit() == 0:
+                solution_index = i
+                solution_found = True
+                break
+
         # clear the genes_string if there is strings in there
         # the array will continue to grow
         genes_string.clear()
@@ -117,12 +143,12 @@ def genetic():
             genes_string.append(gene.__str__())
 
         crossover(genes_string)
+        mutation(genes_string)
 
         # convert the strings back into boards and generate their fitness
         for i in range(NUM_GENES):
             genes[i].set_map(genes_string[i])
             genes[i].fitness()
-
             # For each board check if the solution is found,
             # If the solution is found then we can stop looking
             if genes[i].get_fit() == 0:
