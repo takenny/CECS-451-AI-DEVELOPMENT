@@ -121,6 +121,7 @@ def genetic():
     genes = []
     genes_string = []
     solution_index = 10
+    num_restarts = 0
     solution_found = False
     for i in range(NUM_GENES):
         genes.append(Board(NUM_QUEENS))
@@ -158,10 +159,12 @@ def genetic():
                 solution_found = True
                 solution_index = i
                 break
+        num_restarts += 1
 
     # Print the solution
     run_time = round((time.time() - START_TIME) * 1000, 2)
     print("Runtime: %3.2fms" % run_time)
+    print("# of restarts", num_restarts)
     genes[solution_index].show()
 
 
