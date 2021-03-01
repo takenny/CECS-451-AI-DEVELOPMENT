@@ -37,7 +37,12 @@ def enumerate_combos(empty_neighbors):
     for i in range(int('1'*len(empty_neighbors), 2)+1):
         binstring = "0" + str(len(empty_neighbors)) + "b"
         binary = format(i, binstring)
-        listOfStrings.append(binary)
+        #neighbors = format(i+1, binstring)
+        #if (i + 1 < len(empty_neighbors)) else neighbors = format(i+1, binstring)]
+        if(check_if_true(binary, empty_neighbors, sweeper.flags, functions)):
+            listOfStrings.append(binary)
+
+        #listOfStrings.append(binary)
     print(listOfStrings)
 
 
@@ -63,8 +68,9 @@ if __name__ == '__main__':
     grid = sweeper.checkcell((0, 0))
     functions = {}
     empty_neighbors = gen_functions(sweeper, grid, functions)
-    print("empty neighbors", empty_neighbors)
-    print("functions:", functions)
-    print("sweeper", sweeper.flags)
-    print(int("111111", 2))
+    #print("empty neighbors", empty_neighbors)
+    #print("functions:", functions)
+    #print("sweeper", sweeper.flags)
+    #print(int("111111", 2))
     print(check_if_true("0"*len(empty_neighbors), empty_neighbors, sweeper.flags, functions))
+    print(enumerate_combos(empty_neighbors))
