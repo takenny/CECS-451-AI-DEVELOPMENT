@@ -1,0 +1,18 @@
+6D state space (x1, y1) (x2, y2) (x3, y3) airports
+objective function = sum of distance from each city to
+                            (squared)
+     it's nearest airport. Call it F value
+    -f is our objective funciotn
+        (xi - xc)^2 + (yi - yc)^2 <- xi , yi is coordinate for
+         airport, xc,yc is coordinate for cities
+        (SUM i=1 to 3 )(SUM all cities in ci ) (xi - xc)^2 + (yi - yc)^2
+    c1 c2 c3 set of cities closest airport
+
+gradiant gives maginitude and direction
+gradiant is patial derivative of all 6 functions
+
+
+minimize objective function follow negative slope
+maximize objective function follow positive slope
+
+
