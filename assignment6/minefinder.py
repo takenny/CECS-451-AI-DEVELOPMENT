@@ -18,8 +18,10 @@ def gen_functions(sweeper, grid, functions):
                         if 0 <= i + x < len(grid) and 0 <= j+y < len(grid):
                             if grid[i+x][j+y] == ' ':
                                 neighbors.append((i+x, j+y))
+                # if there is only one neighbor it can be added to the flag list
                 if len(neighbors) == 1 and neighbors[0] not in sweeper.flags:
                     sweeper.flags.append(neighbors[0])
+                # if there are
                 elif len(neighbors) > 1:
                     functions[grid[i][j]].append(neighbors)
 
