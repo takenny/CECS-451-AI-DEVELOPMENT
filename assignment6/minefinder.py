@@ -3,6 +3,7 @@ from mines import Mines
 
 def gen_functions(sweeper, grid, functions):
     functions.clear()
+    empty_neighbors = []
 
     for i in range(len(grid)):
         for j in range(len(grid)):
@@ -17,6 +18,8 @@ def gen_functions(sweeper, grid, functions):
                     for y in range(-1, 2):
                         if 0 <= i + x < len(grid) and 0 <= j+y < len(grid):
                             if grid[i+x][j+y] == ' ':
+                                if (i+x, j+y) not in empty_neighbors:
+                                    empty_neighbors.append((i+x, j+y))
                                 neighbors.append((i+x, j+y))
                 # if there is only one neighbor it can be added to the flag list
                 if len(neighbors) == 1 and neighbors[0] not in sweeper.flags:
@@ -24,6 +27,8 @@ def gen_functions(sweeper, grid, functions):
                 # if there are
                 elif len(neighbors) > 1:
                     functions[grid[i][j]].append(neighbors)
+    return empty_neighbors
+
 
 
 if __name__ == '__main__':
@@ -33,6 +38,8 @@ if __name__ == '__main__':
     sweeper.showcurrent()
     grid = sweeper.checkcell((0, 0))
     functions = {}
-    gen_functions(sweeper, grid, functions)
-    print(functions)
-    print(sweeper.flags)
+    empty_neighbors = gen_functions(sweeper, grid, functions)
+    print("empty neighbors", empty_neighbors)
+    print("functions:", functions)
+    print("sweeper", sweeper.flags)
+    print(int("111111", 2))
