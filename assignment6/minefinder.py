@@ -1,12 +1,12 @@
 from mines import Mines
-import numpy as np
-import pandas as pd
 
 
-def gen_functions(sweeper, grid, functions):
+def gen_functions(sweeper, functions):
     functions.clear()
     empty_neighbors = []
+    grid = sweeper.checkcell((0, 0))
 
+    # iterate through each row in the grid
     for i in range(len(grid)):
         for j in range(len(grid)):
             if grid[i][j] != '0' and grid[i][j] != ' ':
@@ -21,16 +21,18 @@ def gen_functions(sweeper, grid, functions):
                                     empty_neighbors.append((i+x, j+y))
                                 neighbors.append((i+x, j+y))
                 # if there is only one neighbor it can be added to the flag list
-                if len(neighbors) == 1 and neighbors[0] not in sweeper.flags:
-                    sweeper.flags.append(neighbors[0])
-                if len(neighbors) >= 1:
+                if len(neighbors) == int(grid[i][j]):
+                    for cord in neighbors:
+                        if cord not in sweeper.flags:
+                            sweeper.flags.append(cord)
+                if len(neighbors) > 0:
                     if grid[i][j] not in functions:
                         functions.update({grid[i][j]: []})
                     functions[grid[i][j]].append(neighbors)
     return empty_neighbors
 
 
-def enumerate_combos(empty_neighbors, flags, functions):
+def enumerate_combos(empty_neighbors, sweeper, functions):
     # append to list if true
     safe = []
     listOfStrings = []
@@ -41,18 +43,15 @@ def enumerate_combos(empty_neighbors, flags, functions):
         binary = format(i, binstring)
         # neighbors = format(i+1, binstring)
         # if (i + 1 < len(empty_neighbors)) else neighbors = format(i+1, binstring)]
-        if(check_if_true(binary, empty_neighbors, flags, functions)):
+        if(check_if_true(binary, empty_neighbors, sweeper.flags, functions)):
             listOfStrings.append(binary)
-        transposedList = list(map(list, zip(*listOfStrings)))
-        for i in range(len(transposedList)):
-            print("transposed lsit sub i", transposedList[i], ('1' in transposedList[i]), empty_neighbors[i])
-            if '1' not in transposedList[i] and empty_neighbors[i] not in safe:
-                safe.append(empty_neighbors[i])
+    transposed_list = list(map(list, zip(*listOfStrings)))
+    for i in range(len(transposed_list)):
+        if '1' not in transposed_list[i] and empty_neighbors[i] not in safe:
+            safe.append(empty_neighbors[i])
 
-        # listOfStrings.append(binary)
-    print("list:", listOfStrings)
-    print("transposedList: ", transposedList)
-    print("safeList: ", safe)
+    return safe
+
 
 
 def check_if_true(bin_str, neighbors, flags, funct):
@@ -73,17 +72,19 @@ def check_if_true(bin_str, neighbors, flags, funct):
 
 
 if __name__ == '__main__':
-    gridsize = 6
-    n_mines = 3
+    safe = []
+    gridsize = 10
+    n_mines = 10
     sweeper = Mines(gridsize, n_mines)
     sweeper.showcurrent()
-    grid = sweeper.checkcell((0, 0))
     functions = {}
-    empty_neighbors = gen_functions(sweeper, grid, functions)
-    #print("empty neighbors", empty_neighbors)
-    #print("functions:", functions)
-    #print("sweeper", sweeper.flags)
-    #print(int("111111", 2))
-    # print(check_if_true("0"*len(empty_neighbors), empty_neighbors, sweeper.flags, functions))
-    enumerate_combos(empty_neighbors, sweeper.flags, functions)
-    #print(sweeper.isfail())
+
+    while not sweeper.isfail() and not sweeper.checkmines():
+        print(sweeper.isfail(), sweeper.checkmines())
+        empty_neighbors = gen_functions(sweeper, functions)
+        safe = enumerate_combos(empty_neighbors, sweeper, functions)
+
+        for cell in safe:
+            sweeper.checkcell(cell)
+            sweeper.showcurrent()
+        print("safe:", len(safe), "flags:", len(sweeper.flags))

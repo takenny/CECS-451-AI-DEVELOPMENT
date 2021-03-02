@@ -10,7 +10,7 @@ class Mines:
         self.__fail = False;
         self.__currcell = (0,0)
         emptygrid = [['0' for i in range(gridsize)] for i in range(gridsize)]
-        self.__mines = self.__getmines(emptygrid, self.__currcell, numberofmines)        
+        self.__mines = self.__getmines(emptygrid, self.__currcell, numberofmines)
         for i, j in self.__mines:
             emptygrid[i][j] = 'X'
         self.__grid = self.__getnumbers(emptygrid)                
