@@ -1,4 +1,6 @@
 from mines import Mines
+import numpy as np
+import pandas as pd
 
 
 def gen_functions(sweeper, grid, functions):
@@ -30,6 +32,7 @@ def gen_functions(sweeper, grid, functions):
 
 def enumerate_combos(empty_neighbors, flags, functions):
     # append to list if true
+    safe = []
     listOfStrings = []
     diff = 0
 
@@ -40,14 +43,21 @@ def enumerate_combos(empty_neighbors, flags, functions):
         # if (i + 1 < len(empty_neighbors)) else neighbors = format(i+1, binstring)]
         if(check_if_true(binary, empty_neighbors, flags, functions)):
             listOfStrings.append(binary)
+        transposedList = list(map(list, zip(*listOfStrings)))
+        for i in range(len(transposedList)):
+            print("transposed lsit sub i", transposedList[i], ('1' in transposedList[i]), empty_neighbors[i])
+            if '1' not in transposedList[i] and empty_neighbors[i] not in safe:
+                safe.append(empty_neighbors[i])
 
         # listOfStrings.append(binary)
     print("list:", listOfStrings)
+    print("transposedList: ", transposedList)
+    print("safeList: ", safe)
 
 
 def check_if_true(bin_str, neighbors, flags, funct):
     nm = {}
-    print(functions)
+    #print(functions)
     for i in range(len(bin_str)):
         nm.update({neighbors[i]: bin_str[i]})
     for key, value in funct.items():
@@ -76,4 +86,4 @@ if __name__ == '__main__':
     #print(int("111111", 2))
     # print(check_if_true("0"*len(empty_neighbors), empty_neighbors, sweeper.flags, functions))
     enumerate_combos(empty_neighbors, sweeper.flags, functions)
-    print(sweeper.isfail())
+    #print(sweeper.isfail())
