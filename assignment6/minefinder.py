@@ -49,29 +49,41 @@ def get_neighbors(grid, i, j):
 def enumerate_combos(empty_neighbors, sweeper, functions):
     # append to list if true
     safe = []
+    bad = []
     listOfStrings = []
     diff = 0
 
     for i in range(int('1'*len(empty_neighbors), 2)+1):
         binstring = "0" + str(len(empty_neighbors)) + "b"
         binary = format(i, binstring)
+        #print("before checkif true ")
         if check_if_true(binary, empty_neighbors, sweeper.flags, functions):
             listOfStrings.append(binary)
     transposed_list = list(map(list, zip(*listOfStrings)))
+    print("after chejck if true")
     for i in range(len(transposed_list)):
         if '1' not in transposed_list[i] and empty_neighbors[i] not in safe:
             safe.append(empty_neighbors[i])
-
+        if '0' not in transposed_list[i] and empty_neighbors[i] not in safe:
+            bad.append(empty_neighbors[i])
     return safe
 
+def check(bin_str, funct):
+    if bin_str in funct:
+        return True
+    else:
+        return False
 
 
 def check_if_true(bin_str, neighbors, flags, funct):
     nm = {}
     #print(functions)
     for i in range(len(bin_str)):
-        nm.update({neighbors[i]: bin_str[i]})
+        #print(i)
+        #print("wassup")
+        nm.update({empty_neighbors[i]: bin_str[i]})
     for key, value in funct.items():
+        print("GETS OUT?")
         for cord_list in value:
             sum = 0
             for cord in cord_list:
@@ -86,7 +98,11 @@ def check_if_true(bin_str, neighbors, flags, funct):
 if __name__ == '__main__':
     safe = []
     gridsize = 16
+<<<<<<< Updated upstream
     n_mines = 30
+=======
+    n_mines = 15
+>>>>>>> Stashed changes
     sweeper = Mines(gridsize, n_mines)
     sweeper.showcurrent()
     functions = {}
