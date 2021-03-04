@@ -10,7 +10,7 @@ class BCell:
         self.neighbors = neighbors
 
 
-def gen_functions(sweeper, functions):
+def gen_functions():
     functions.clear()
     empty_neighbors = []
     grid = sweeper.checkcell((0, 0))
@@ -26,13 +26,17 @@ def gen_functions(sweeper, functions):
                 neighbors.clear()
                 for x in range(-1, 2):
                     for y in range(-1, 2):
-                        if 0 <= i + x < len(grid) and 0 <= j+y < len(grid):
-                            if grid[i+x][j+y] == ' ':
-                                if (i+x, j+y) not in empty_neighbors and (i+x,j+x) not in sweeper.flags:
-                                    empty_neighbors.append((i+x, j+y))
-                                if (i+x, j+y) in sweeper.flags:
+                        ix = i + x
+                        jy = j + y
+                        if 0 <= ix < len(grid) and 0 <= jy < len(grid):
+                            if grid[ix][jy] == ' ':
+                                if (ix, jy) not in sweeper.flags:
+                                    if (ix, jy) not in empty_neighbors:
+                                        empty_neighbors.append((ix, jy))
+                                else:
                                     flags += 1
-                                neighbors.append((i+x, j+y))
+                                neighbors.append((ix, jy))
+
                 # if there is only one neighbor it can be added to the flag list
                 if len(neighbors) == int(grid[i][j]):
                     for cord in neighbors:
@@ -40,32 +44,28 @@ def gen_functions(sweeper, functions):
                             sweeper.flags.append(cord)
                 elif len(neighbors) > 0:
                     functions.update({(i, j): BCell(grid[i][j], neighbors, flags)})
-    print("flags: ", len(sweeper.flags), sweeper.flags)
-    print("neighbors: ", len(empty_neighbors), empty_neighbors)
 
-    for cell in empty_neighbors:
-        empty_neighbors.remove(cell)
 
     return empty_neighbors
 
 
-def remove_cell(functions, empty_neighbors, cell):
-    if cell in empty_neighbors:
-        empty_neighbors.remove(cell)
+def optimize_functions():
+
+    for cell in empty_neighbors.copy():
+        if cell in sweeper.flags:
+            empty_neighbors.remove(cell)
+            # optimized = True
+    # print(empty_neighbors)
+
     for key, value in functions.copy().items():
-        if cell in value.neighbors:
-            value.neighbors.remove(cell)
-        print(key, "flags:", value.flags, "value:", value.value, value.neighbors)
-        if value.flags == int(value.value):
-            for cord in value.neighbors:
-                print(key, "flags:", value.flags, "value:", value.value, value.neighbors)
-                sweeper.checkcell(cord)
-                sweeper.showcurrent()
-            functions.pop(key)
+        # print(key, [key for key, value in functions])
+        for cell in value.neighbors.copy():
+            if cell in sweeper.flags:
+                value.neighbors.remove(cell)
 
 
 
-def enumerate_combos(empty_neighbors, sweeper, functions):
+def enumerate_combos():
     # append to list if true
     safe_mine = [[], []]
     listOfStrings = []
@@ -74,7 +74,7 @@ def enumerate_combos(empty_neighbors, sweeper, functions):
     for i in range(int('1'*len(empty_neighbors), 2)+1):
         binstring = "0" + str(len(empty_neighbors)) + "b"
         binary = format(i, binstring)
-        if check_if_true(binary, empty_neighbors, sweeper.flags, functions):
+        if check_if_true(binary):
             listOfStrings.append(binary)
     transposed_list = list(map(list, zip(*listOfStrings)))
     for i in range(len(transposed_list)):
@@ -86,12 +86,13 @@ def enumerate_combos(empty_neighbors, sweeper, functions):
     return safe_mine
 
 
-def check_if_true(bin_str, neighbors, flags, funct):
+def check_if_true(bin_str):
     nm = {}
-    # print(functions)
+    # print(empty_neighbors)
     for i in range(len(bin_str)):
-        nm.update({neighbors[i]: bin_str[i]})
-    for key, value in funct.items():
+        nm.update({empty_neighbors[i]: bin_str[i]})
+    # print(nm)
+    for key, value in functions.items():
         sum = value.flags
         for cord in value.neighbors:
             sum += int(nm[cord])
@@ -110,11 +111,14 @@ if __name__ == '__main__':
     while not sweeper.isfail() and not sweeper.checkmines():
         print(sweeper.isfail(), sweeper.checkmines())
         print("starting gen functions")
-        empty_neighbors = gen_functions(sweeper, functions)
+        empty_neighbors = gen_functions()
+        optimize_functions()
         # print(empty_neighbors)
         print("end gen functions")
         print("start enumerate")
-        safe = enumerate_combos(empty_neighbors, sweeper, functions)
+        print("flags: ", len(sweeper.flags), sweeper.flags)
+        print("neighbors: ", len(empty_neighbors), empty_neighbors)
+        safe = enumerate_combos()
         print("end enumerate")
 
         for cell in safe[0]:
