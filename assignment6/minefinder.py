@@ -102,7 +102,7 @@ def check_if_true(bin_str, neighbors, flags, funct):
 
 if __name__ == '__main__':
     gridsize = 16
-    n_mines = 30
+    n_mines = 40
     sweeper = Mines(gridsize, n_mines)
     sweeper.showcurrent()
     functions = {}
