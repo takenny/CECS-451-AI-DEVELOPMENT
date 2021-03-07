@@ -45,7 +45,6 @@ def gen_functions():
                 elif len(neighbors) > 0:
                     functions.update({(i, j): BCell(grid[i][j], neighbors, flags)})
 
-
     return empty_neighbors
 
 
@@ -62,7 +61,6 @@ def optimize_functions():
         for cell in value.neighbors.copy():
             if cell in sweeper.flags:
                 value.neighbors.remove(cell)
-
 
 
 def enumerate_combos():
@@ -120,11 +118,17 @@ if __name__ == '__main__':
         print("neighbors: ", len(empty_neighbors), empty_neighbors)
         safe = enumerate_combos()
         print("end enumerate")
+        for key, value in functions.items():
+            print("coord:", key, "value", value.value, "flags:", value.flags, "neighbors", value.neighbors)
+
 
         for cell in safe[0]:
             sweeper.checkcell(cell)
             sweeper.showcurrent()
+
         for mine in safe[1]:
             if mine not in sweeper.flags:
                 sweeper.flags.append(mine)
+
         print("safe:", len(safe[0]), "flags:", len(sweeper.flags))
+        break
