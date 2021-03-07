@@ -8,11 +8,13 @@ class BCell:
         self.value = value
         self.flags = flags
         self.neighbors = neighbors
+        self.prob = int(self.value)/len(self.neighbors)
 
 
 def gen_functions():
     functions.clear()
     empty_neighbors = []
+    empty_neighbors.clear()
     grid = sweeper.checkcell((0, 0))
 
     # iterate through each row in the grid
@@ -63,6 +65,30 @@ def optimize_functions():
                 value.neighbors.remove(cell)
 
 
+def remove_safe_from_functions():
+    for cell, data in functions.items():
+        print("cell:", cell, "value:", data.value, "flags:", data.flags, "neighbors:", data.neighbors)
+        if int(data.value) == data.flags:
+            temp = [c for c in data.neighbors]
+            if data.neighbors[0] not in sweeper.flags:
+                print("removed using function", data.neighbors[0])
+                sweeper.checkcell(data.neighbors[0])
+                sweeper.showcurrent()
+                return True
+    return False
+
+
+# def seperate_neighbors():
+#     temp = []
+#     first = True
+#     for cell, data in functions.item():
+#         if first:
+#             temp.append(data.neighbors)
+#             first = False
+#         else:
+#             for groups in temp:
+
+
 def enumerate_combos():
     # append to list if true
     safe_mine = [[], []]
@@ -92,6 +118,7 @@ def check_if_true(bin_str):
     # print(nm)
     for key, value in functions.items():
         sum = value.flags
+        print(value.prob)
         for cord in value.neighbors:
             sum += int(nm[cord])
         if sum != int(value.value):
@@ -107,20 +134,24 @@ if __name__ == '__main__':
     functions = {}
 
     while not sweeper.isfail() and not sweeper.checkmines():
-        print(sweeper.isfail(), sweeper.checkmines())
-        print("starting gen functions")
-        empty_neighbors = gen_functions()
-        optimize_functions()
-        # print(empty_neighbors)
-        print("end gen functions")
+        # print(sweeper.isfail(), sweeper.checkmines())
+        # print("starting gen functions")
+
+        i_hate_this_project = True  # This is true
+        while i_hate_this_project:
+            empty_neighbors = gen_functions()
+            optimize_functions()
+            i_hate_this_project = remove_safe_from_functions()
+            # print(i_hate_this_project)
+        if sweeper.checkmines():
+            break
+
+        # print("end gen functions")
         print("start enumerate")
         print("flags: ", len(sweeper.flags), sweeper.flags)
         print("neighbors: ", len(empty_neighbors), empty_neighbors)
         safe = enumerate_combos()
         print("end enumerate")
-        for key, value in functions.items():
-            print("coord:", key, "value", value.value, "flags:", value.flags, "neighbors", value.neighbors)
-
 
         for cell in safe[0]:
             sweeper.checkcell(cell)
@@ -130,5 +161,8 @@ if __name__ == '__main__':
             if mine not in sweeper.flags:
                 sweeper.flags.append(mine)
 
-        print("safe:", len(safe[0]), "flags:", len(sweeper.flags))
-        break
+        # print("safe:", len(safe[0]), "flags:", len(sweeper.flags))
+
+
+if sweeper.checkmines():
+    print("It's Solved!")
