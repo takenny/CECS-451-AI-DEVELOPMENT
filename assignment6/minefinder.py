@@ -97,6 +97,20 @@ def separate_neighbors():
     return temp
 
 
+def prob_stuck(empty_neighbors):
+    probability = {}
+    for group in empty_neighbors:
+        for cell in group:
+            probability[cell] = 1
+            for key, value in functions.items():
+                if cell in value.neighbors:
+                    probability[cell] *= value.prob
+                    print(" AOSJDIASJD" , probability[cell])
+            if value.prob == min(probability):
+                sweeper.checkcell(cell)
+                sweeper.showcurrent()
+
+
 def enumerate_combos():
     # append to list if true
     safe_mine = [[], []]
@@ -169,6 +183,7 @@ if __name__ == '__main__':
             empty_neighbors = gen_functions()
             optimize_functions()
             i_hate_this_project = remove_safe_from_functions()
+            prob_stuck(empty_neighbors)
         print("end annoying print")
         if sweeper.checkmines():
             break
