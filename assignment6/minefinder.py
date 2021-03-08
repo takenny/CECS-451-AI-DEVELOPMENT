@@ -1,4 +1,5 @@
 from mines import Mines
+import copy
 
 
 # class to container boundary data
@@ -8,7 +9,7 @@ class BCell:
         self.value = value
         self.flags = flags
         self.neighbors = neighbors
-        self.prob = int(self.value)/len(self.neighbors)
+        self.prob = (int(self.value)-self.flags)/len(self.neighbors)
 
 
 def gen_functions():
@@ -132,6 +133,23 @@ def check_if_true(bin_str, group):
             return False
     return True
 
+def prob_stuck():
+    probability = {}
+    for group in empty_neighbors:
+        for cell in group:
+            probability[cell] = 0
+            counter = 0
+            for key, value in functions.items():
+                if cell in value.neighbors:
+                    probability[cell] += value.prob
+                    counter += 1
+            probability[cell] /= counter
+    print(probability)
+    cell = min(probability, key=probability.get)
+    print("cell: ", cell)
+    sweeper.checkcell(cell)
+    sweeper.showcurrent()
+
 
 if __name__ == '__main__':
     gridsize = 16
@@ -139,8 +157,12 @@ if __name__ == '__main__':
     sweeper = Mines(gridsize, n_mines)
     sweeper.showcurrent()
     functions = {}
+    prev_flags = []
+    prev_neighbors = []
+    safe = []
 
     while not sweeper.isfail() and not sweeper.checkmines():
+
         print("start annoying print")
         i_hate_this_project = True  # This is true
         while i_hate_this_project:
@@ -163,7 +185,14 @@ if __name__ == '__main__':
             for mine in safe[1]:
                 if mine not in sweeper.flags:
                     sweeper.flags.append(mine)
-
+            print("prev_neighbor:", prev_neighbors)
+            print("empty_neighbors: ", empty_neighbors)
+            print("flags:", sweeper.flags)
+            print("loop check: ", (prev_neighbors == empty_neighbors), (prev_flags == sweeper.flags))
+            if prev_neighbors == empty_neighbors and prev_flags == sweeper.flags:
+                prob_stuck()
+            prev_flags = copy.deepcopy(sweeper.flags)
+            prev_neighbors = copy.deepcopy(empty_neighbors)
 
 if sweeper.checkmines():
     print("It's Solved!")
