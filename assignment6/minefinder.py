@@ -85,8 +85,16 @@ def remove_safe_from_functions():
 #         if first:
 #             temp.append(data.neighbors)
 #             first = False
+#             print(temp)
 #         else:
-#             for groups in temp:
+#             for i in range(len(temp)):
+#                 if any(item in data.neighbors for item in temp[i]):
+#                     for item in data.neighbor:
+#                         if item not in temp[i]:
+#                             temp[i].append
+#                 else:
+#                     temp.append()
+
 
 
 def enumerate_combos():
@@ -112,13 +120,10 @@ def enumerate_combos():
 
 def check_if_true(bin_str):
     nm = {}
-    # print(empty_neighbors)
     for i in range(len(bin_str)):
         nm.update({empty_neighbors[i]: bin_str[i]})
-    # print(nm)
     for key, value in functions.items():
         sum = value.flags
-        print(value.prob)
         for cord in value.neighbors:
             sum += int(nm[cord])
         if sum != int(value.value):
@@ -134,34 +139,29 @@ if __name__ == '__main__':
     functions = {}
 
     while not sweeper.isfail() and not sweeper.checkmines():
-        # print(sweeper.isfail(), sweeper.checkmines())
-        # print("starting gen functions")
 
         i_hate_this_project = True  # This is true
         while i_hate_this_project:
             empty_neighbors = gen_functions()
             optimize_functions()
             i_hate_this_project = remove_safe_from_functions()
-            # print(i_hate_this_project)
         if sweeper.checkmines():
             break
+        else:
+            # print("end gen functions")
+            print("start enumerate")
+            print("flags: ", len(sweeper.flags), sweeper.flags)
+            print("neighbors: ", len(empty_neighbors), empty_neighbors)
+            safe = enumerate_combos()
+            print("end enumerate")
 
-        # print("end gen functions")
-        print("start enumerate")
-        print("flags: ", len(sweeper.flags), sweeper.flags)
-        print("neighbors: ", len(empty_neighbors), empty_neighbors)
-        safe = enumerate_combos()
-        print("end enumerate")
+            for cell in safe[0]:
+                sweeper.checkcell(cell)
+                sweeper.showcurrent()
 
-        for cell in safe[0]:
-            sweeper.checkcell(cell)
-            sweeper.showcurrent()
-
-        for mine in safe[1]:
-            if mine not in sweeper.flags:
-                sweeper.flags.append(mine)
-
-        # print("safe:", len(safe[0]), "flags:", len(sweeper.flags))
+            for mine in safe[1]:
+                if mine not in sweeper.flags:
+                    sweeper.flags.append(mine)
 
 
 if sweeper.checkmines():
