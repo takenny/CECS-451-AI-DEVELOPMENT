@@ -114,7 +114,7 @@ def enumerate_combos():
         if '1' not in transposed_list[i] and group[i] not in safe_mine[0]:
             safe_mine[0].append(group[i])
         if '0' not in transposed_list[i] and group[i] not in safe_mine[1]:
-            safe_mine[1].append(grou[i])
+            safe_mine[1].append(group[i])
 
     return safe_mine
 
