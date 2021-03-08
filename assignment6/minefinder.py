@@ -55,8 +55,6 @@ def optimize_functions():
     for cell in empty_neighbors.copy():
         if cell in sweeper.flags:
             empty_neighbors.remove(cell)
-            # optimized = True
-    # print(empty_neighbors)
 
     for key, value in functions.copy().items():
         # print(key, [key for key, value in functions])
@@ -67,7 +65,7 @@ def optimize_functions():
 
 def remove_safe_from_functions():
     for cell, data in functions.items():
-        print("cell:", cell, "value:", data.value, "flags:", data.flags, "neighbors:", data.neighbors)
+        # print("cell:", cell, "value:", data.value, "flags:", data.flags, "neighbors:", data.neighbors)
         if int(data.value) == data.flags:
             temp = [c for c in data.neighbors]
             if data.neighbors[0] not in sweeper.flags:
@@ -78,23 +76,24 @@ def remove_safe_from_functions():
     return False
 
 
-# def seperate_neighbors():
-#     temp = []
-#     first = True
-#     for cell, data in functions.item():
-#         if first:
-#             temp.append(data.neighbors)
-#             first = False
-#             print(temp)
-#         else:
-#             for i in range(len(temp)):
-#                 if any(item in data.neighbors for item in temp[i]):
-#                     for item in data.neighbor:
-#                         if item not in temp[i]:
-#                             temp[i].append
-#                 else:
-#                     temp.append()
-
+def separate_neighbors():
+    temp = []
+    first = True
+    for cell, data in functions.items():
+        if first:
+            temp.append(data.neighbors)
+            first = False
+        else:
+            part_of_group = False
+            for i in range(len(temp)):
+                if any(item in data.neighbors for item in temp[i]):
+                    for item in data.neighbors:
+                        if item not in temp[i]:
+                            temp[i].append(item)
+                    part_of_group = True
+            if not part_of_group:
+                temp.append(data.neighbors)
+    return temp
 
 
 def enumerate_combos():
@@ -103,29 +102,32 @@ def enumerate_combos():
     listOfStrings = []
     diff = 0
 
-    for i in range(int('1'*len(empty_neighbors), 2)+1):
-        binstring = "0" + str(len(empty_neighbors)) + "b"
-        binary = format(i, binstring)
-        if check_if_true(binary):
-            listOfStrings.append(binary)
+    for group in empty_neighbors:
+        group_size = len(group)
+        for i in range(int('1'*group_size, 2)+1):
+            binstring = "0" + str(group_size) + "b"
+            binary = format(i, binstring)
+            if check_if_true(binary, group):
+                listOfStrings.append(binary)
     transposed_list = list(map(list, zip(*listOfStrings)))
     for i in range(len(transposed_list)):
-        if '1' not in transposed_list[i] and empty_neighbors[i] not in safe_mine[0]:
-            safe_mine[0].append(empty_neighbors[i])
-        if '0' not in transposed_list[i] and empty_neighbors[i] not in safe_mine[1]:
-            safe_mine[1].append(empty_neighbors[i])
+        if '1' not in transposed_list[i] and group[i] not in safe_mine[0]:
+            safe_mine[0].append(group[i])
+        if '0' not in transposed_list[i] and group[i] not in safe_mine[1]:
+            safe_mine[1].append(grou[i])
 
     return safe_mine
 
 
-def check_if_true(bin_str):
+def check_if_true(bin_str, group):
     nm = {}
     for i in range(len(bin_str)):
-        nm.update({empty_neighbors[i]: bin_str[i]})
+        nm.update({group[i]: bin_str[i]})
     for key, value in functions.items():
         sum = value.flags
         for cord in value.neighbors:
-            sum += int(nm[cord])
+            if cord in nm:
+                sum += int(nm[cord])
         if sum != int(value.value):
             return False
     return True
@@ -139,19 +141,18 @@ if __name__ == '__main__':
     functions = {}
 
     while not sweeper.isfail() and not sweeper.checkmines():
-
+        print("start annoying print")
         i_hate_this_project = True  # This is true
         while i_hate_this_project:
             empty_neighbors = gen_functions()
             optimize_functions()
             i_hate_this_project = remove_safe_from_functions()
+        print("end annoying print")
         if sweeper.checkmines():
             break
         else:
-            # print("end gen functions")
+            empty_neighbors = separate_neighbors()
             print("start enumerate")
-            print("flags: ", len(sweeper.flags), sweeper.flags)
-            print("neighbors: ", len(empty_neighbors), empty_neighbors)
             safe = enumerate_combos()
             print("end enumerate")
 
