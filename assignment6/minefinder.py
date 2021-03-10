@@ -1,6 +1,8 @@
 from mines import Mines
 import copy
+import time
 
+start_time = time.time()
 
 # class to container boundary data
 class BCell:
@@ -212,14 +214,13 @@ if __name__ == '__main__':
     safe = []  # safe/flag list
 
     while not sweeper.isfail() and not sweeper.checkmines():
-        # I really do hate this project
-        i_hate_this_project = True  # This is true
+        safe_values_from_functions = True  # This is true
         # While you can easily get safe values from functions, run continue this loop
         # This helps to keep the length of the neighbor groups down (kinda)
-        while i_hate_this_project:
+        while safe_values_from_functions:
             empty_neighbors = gen_functions()
             optimize_functions()
-            i_hate_this_project = remove_safe_from_functions()
+            safe_values_from_functions = remove_safe_from_functions()
             prob_stuck(empty_neighbors)
         # If this is already solved, then break out of the loop
         if sweeper.checkmines():
@@ -247,13 +248,16 @@ if __name__ == '__main__':
 
             # If the list of neighbors and flags remains the same, we are stuck in a loop and we have to guess a cell
             if prev_neighbors == empty_neighbors and prev_flags == sweeper.flags:
-                prob_stuck()
-
+                prob_stuck(empty_neighbors)
+                for cell in safe[0]:
+                    sweeper.checkcell(cell)
+                    sweeper.showcurrent()
             # make copies to check if its stuck in a loop
             prev_flags = copy.deepcopy(sweeper.flags)
             prev_neighbors = copy.deepcopy(empty_neighbors)
 
 if sweeper.checkmines():
-    print("It's Solved!")
+    print("It's Solved! in %s seconds" % (time.time() - start_time))
 if sweeper.isfail():
-    print("It failed")
+    print("It failed in %s seconds" % (time.time() - start_time))
+
