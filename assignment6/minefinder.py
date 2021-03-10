@@ -130,13 +130,14 @@ def separate_neighbors():
             # if item was not part of any group, create new sublist
             if not part_of_group:
                 temp.append(data.neighbors)
+    #print(temp)
     return temp  # Return the seperated groups
 
 
 # Find the cell with the lowest probability of being a mine
 # Currently doesn't work great
 # Maybe we should consider non neighboring cells?
-def prob_stuck(empty_neighbors):
+def prob_stuck():
     probability = {}  # dictionary to hold the probabilities
     # iterate through the empty neighbor groups
     for group in empty_neighbors:
@@ -158,7 +159,7 @@ def prob_stuck(empty_neighbors):
             # Get the average of the probabilities
             probability[cell] /= counter
     # Get the cell with the lowest probability and check that cell
-    cell = min(probability, key=probability.get())
+    cell = min(probability, key=probability.get)
     sweeper.checkcell(cell)
     sweeper.showcurrent()
 
@@ -221,7 +222,6 @@ if __name__ == '__main__':
             empty_neighbors = gen_functions()
             optimize_functions()
             safe_values_from_functions = remove_safe_from_functions()
-            prob_stuck(empty_neighbors)
         # If this is already solved, then break out of the loop
         if sweeper.checkmines():
             break
@@ -248,10 +248,8 @@ if __name__ == '__main__':
 
             # If the list of neighbors and flags remains the same, we are stuck in a loop and we have to guess a cell
             if prev_neighbors == empty_neighbors and prev_flags == sweeper.flags:
-                prob_stuck(empty_neighbors)
-                for cell in safe[0]:
-                    sweeper.checkcell(cell)
-                    sweeper.showcurrent()
+                prob_stuck()
+
             # make copies to check if its stuck in a loop
             prev_flags = copy.deepcopy(sweeper.flags)
             prev_neighbors = copy.deepcopy(empty_neighbors)
