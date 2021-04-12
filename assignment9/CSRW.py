@@ -6,7 +6,7 @@ def prob_c():
     return .5
 
 
-def prob_c(c: int) -> int:
+def prob_c(c: float) -> int:
     return 1 if c < .5 else 0
 
 
@@ -17,11 +17,25 @@ def prob_r(r, c):
         return .2 if r else .8
 
 
+def prob_r(r: float, c: bool) -> int:
+    if c:
+        return 1 if r < .8 else 0
+    else:
+        return 1 if r < .2 else 0
+
+
 def prob_s(s, c):
     if c:
         return .1 if s else .9
     else:
         return .5
+
+
+def prob_s(s: float, c: bool) -> int:
+    if c:
+        return 1 if s < .1 else 0
+    else:
+        return 1 if s < .5 else 0
 
 
 def prob_w(w, s, r):
@@ -33,6 +47,17 @@ def prob_w(w, s, r):
         return .90 if w else .1
     if not s and not r:
         return .05 if w else .95
+
+
+def prob_w(w: float, s: bool, r: bool):
+    if s and r:
+        return 1 if w < .99 else 0
+    if s and not r:
+        return 1 if w < .95 else 0
+    if not s and r:
+        return 1 if w < .9 else 0
+    if not s and not r:
+        return 1 if w < .05 else 0
 
 
 class CSRW:
@@ -48,6 +73,7 @@ class CSRW:
             self.__csrw_dict__[i] = args[i]
 
         self.__states__ = self.__gen_states__()
+        self.__current_state__ = self.__get_first_state__()
 
     def __gen_states__(self):
         states = []
@@ -60,7 +86,7 @@ class CSRW:
         return states
 
     def __check_state_valid__(self, state):
-        print(state)
+        # print(state)
         for index in self.__static__:
             if bool(int(state[index])) != self.__csrw_dict__[index]:
                 return False
@@ -74,8 +100,39 @@ class CSRW:
 
     def __get_first_state__(self):
         state = ""
-        flip = np.random.rand()
+        # get c
+        if self.__csrw_dict__[0] is None:
+            temp = np.random.rand()
+            c = prob_c(temp)
+        else:
+            c = self.__csrw_dict__[0]
+        state += str(int(c))
 
+        if self.__csrw_dict__[1] is None:
+            temp = np.random.rand()
+            s = prob_s(s=temp, c=c)
+        else:
+            s = self.__csrw_dict__[1]
+        state += str(int(s))
+
+        if self.__csrw_dict__[2] is None:
+            temp = np.random.rand()
+            r = prob_r(r=temp, c=c)
+        else:
+            r = self.__csrw_dict__[2]
+        state += str(int(r))
+
+        if self.__csrw_dict__[3] is None:
+            temp = np.random.rand()
+            w = prob_w(w= temp, r=r, s=s)
+        else:
+            w = self.__csrw_dict__[3]
+        state += str(int(w))
+
+        return state
+
+    def get_current_state(self):
+        return self.__current_state__
 
 
 
@@ -83,4 +140,5 @@ if __name__ =="__main__":
     test = CSRW([None, True, None, True])
     print(test.get_static())
     print(test.get_states())
-    print(prob_w(w=False, s=False, r=True))
+    print(prob_s(.0999, True))
+    print(test.get_current_state())
