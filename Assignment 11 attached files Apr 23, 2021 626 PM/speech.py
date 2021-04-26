@@ -1,3 +1,5 @@
+import distance
+
 class Speech:
 	def __init__(self):
 		self.original = []
@@ -7,16 +9,18 @@ class Speech:
 	def read_original(self, inFile):
 		with open(inFile) as file:
 			for line in file:
-				fixed = line.replace('â€™',"'")
+				fixed = line.replace('â€™',"'") #changed the incorrect thing outputted
 				self.original.append(fixed.rstrip("\n"))
 
 
 	def conv_audio(self, inDir):
 		print("uh")
 
-	def comp_string(self):
-		print("uh")
 
+	def comp_string(self):
+		LD = distance.levenshtein(self.original, self.recognized)
+		NLD = LD / max(len(self.original), len(self.recognized))
+		return NLD
 
 
 if __name__ == '__main__':
