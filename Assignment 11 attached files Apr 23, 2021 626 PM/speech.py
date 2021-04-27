@@ -82,4 +82,3 @@ if __name__ == '__main__':
 	print("NAMES for PLOT ", name)
 	ax = sns.boxplot(name, s.distances)
 	plt.show()
-	ax.show()
