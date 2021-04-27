@@ -1,7 +1,9 @@
-import pathlib
-
+import glob
+import os
+from zipfile import ZipFile
 import distance
 import speech_recognition as sr
+
 
 class Speech:
 	def __init__(self):
@@ -17,12 +19,19 @@ class Speech:
 
 
 	def conv_audio(self, inDir):
-		print('in')
 		r = sr.Recognizer()
-		harvard = sr.AudioFile('08-Sent01.wav')
-		with harvard as source:
-			audio = r.record(source)
-		print(r.recognize_google(audio))
+		#os.chdir("inDir/Folder")
+		os.chdir("inDir")
+	#	file_name = "Group 03.zip"
+	#	with ZipFile(file_name, 'r') as zip:
+	#		zip.extractall()
+		for file in glob.glob("*.wav"):
+			harvard = sr.AudioFile(file)
+			with harvard as source:
+				audio = r.record(source)
+				audio_speech = r.recognize_google(audio)
+				s.recognized.append(audio_speech)
+
 		#for file in inDir:
 		#	print('yep')
 		#	audio = sr.AudioFile(file)
@@ -42,4 +51,7 @@ class Speech:
 if __name__ == '__main__':
 	s = Speech()
 	s.read_original("How Speech Recognition Works.txt")
-	audio = s.conv_audio("inDir")
+	print(s.original)
+	inDir = "C:/Users/kta67/Desktop/451 AI/CECS-451-AI-DEVELOPMENT/Assignment 11 attached files Apr 23, 2021 626 PM/"
+	s.conv_audio(inDir)
+	NLD = s.comp_string() #need to check if NLD is right bc i might need to alternate the strings to be individual words
