@@ -13,6 +13,7 @@ class Speech:
 		self.original = []
 		self.recognized = []
 		self.distances = []
+		self.test = [0.9027777777777778, 0.9073660714285714, 0.911690496215307, 0.9269256089532587, 0.9383450513791238, 0.9473447344734474, 0.9509569377990431, 0.954239091876552, 0.9465435208508256, 0.949740932642487, 0.9529832935560859, 0.954013875123885, 0.9562383612662942, 0.9569874752801583, 0.9602909972719006, 0.9604577056778679, 0.9595108695652174, 0.9610062893081761, 0.9614834247555449, 0.96256374594344, 0.9616634178037686, 0.962657313802352, 0.9628591450595655, 0.9632431383958879, 0.9633920296570899]
 
 	def read_original(self, inFile):
 		with open(inFile) as file:
@@ -60,6 +61,7 @@ class Speech:
 if __name__ == '__main__':
 	s = Speech()
 	name = []
+	df = pd.DataFrame()
 	s.read_original("How Speech Recognition Works.txt")
 	os.chdir("inDir")
 	for i in range(1, 26): #changing range for faster compile then ened to change it back to 26
@@ -71,14 +73,14 @@ if __name__ == '__main__':
 			inDir = "*Sent" + str(i) + ".wav"
 			name_for_plot = "Sent" + str(i)
 			name.append(name_for_plot)
-		s.conv_audio(inDir)
-		#print(s.original)
-		#print("THIS ", s.recognized)
-		s.comp_string() #need to check if NLD is right bc i might need to alternate the strings to be individual words
-		#print("THIS IS NLD ", s.distances)
-		#then now i need to plot graph probalby or add values to the graph somehow
-		#print(s.distances[i-1])
-	print("DISTANCE ", s.distances)
-	print("NAMES for PLOT ", name)
-	ax = sns.boxplot(name, s.distances)
+		#s.conv_audio(inDir)
+		#s.comp_string() #need to check if NLD is right bc i might need to alternate the strings to be individual words
+		#df.loc[i] = name_for_plot + str(s.distances)
+		print("Done with %d iteration", i)
+
+#	df[name_for_plot] = s.distances
+#	ax = sns.boxplot(x=name, y=df[name_for_plot])
+#TESTIONG PURPOSES
+
+	ax = sns.boxplot(name, s.test)
 	plt.show()
