@@ -34,12 +34,16 @@ class Speech:
 
 
 	def comp_string(self):
+					#flat_list_recognized = [item for sublist in s.recognized for item in sublist]
+					#print("flat List REcognized ", flat_list_recognized)
+					#flat_list_original = [item for sublist in s.original for item in sublist]
+					#print("flat list original ", self.original)
+					#LD = distance.levenshtein(flat_list_original, flat_list_recognized)
+		#print("original is ", self.original)
+		#print("length o ", len(self.original))
+		#print("uh recognized is ", self.recognized)
+		#print("length r ", len(self.recognized))
 
-		#flat_list_recognized = [item for sublist in s.recognized for item in sublist]
-		#print("flat List REcognized ", flat_list_recognized)
-		#flat_list_original = [item for sublist in s.original for item in sublist]
-		#print("flat list original ", self.original)
-		#LD = distance.levenshtein(flat_list_original, flat_list_recognized)
 		for i in range(len(self.original)):
 			original_sentence = self.original[i]
 			recognized_sentence = self.recognized[i]
@@ -76,8 +80,11 @@ if __name__ == '__main__':
 			name.append(name_for_plot)
 		s.conv_audio(inDir)
 		s.comp_string() #need to check if NLD is right bc i might need to alternate the strings to be individual words
+		s.recognized.clear() #clear list after each finished thing iteration
+		#print("checked list if cleared ", s.recognized)
 		print("Done with iteration", i)
 
+	print("NLDS are ", s.distances)
 	#test = np.array(s.test).transpose()  #testing purposes.
 	test = np.array(s.distances).transpose() #might need to transpose raw datra
 	df = pd.DataFrame(test)
