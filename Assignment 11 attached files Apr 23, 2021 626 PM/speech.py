@@ -74,7 +74,7 @@ if __name__ == '__main__':
             s.recognized.clear()  # clear list after each finished thing iteration
         else:
             name.remove(name_for_plot)
-        print("Done with iteration", i)
+        print("Done with group", i)
 
     test = np.array(s.distances).transpose()
     df = pd.DataFrame(test)
