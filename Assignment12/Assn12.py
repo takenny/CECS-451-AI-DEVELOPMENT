@@ -6,6 +6,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 from sklearn.ensemble import BaggingClassifier
+from sklearn.ensemble import RandomForestRegressor
+
 if __name__ == "__main__":
     cancer = sklearn.datasets.load_breast_cancer() #load dataset A
     print("Dataset Feature names are ", list(cancer.feature_names)) #print out features names B
@@ -29,15 +31,17 @@ if __name__ == "__main__":
                        feature_names=cancer.feature_names, #each node should include feature name
                        class_names=cancer.target_names,
                        filled=True)
-    plt.show()
+  #  plt.show()
 
     #I Program that generates multiple decision trees using the bagging. Draw a 2d Line plot
+   # bagging_score = BaggingClassifier(base_estimator=clf, n_estimators=100, random_state=0).fit(X_train, y_train)
+   # plt.plot(bagging_score.n_estimators, bagging_score)
+   # plt.show()
+
+    #J Program that generates multiple decision trees using the AdaBoost. Draw a 2D Line plot
 
 
-    #J Program that generates multiple deciison trees using the AdaBoost. Draw a 2D Line plot
-
-
-    #K Program that generates multiple deciiosn trees using the random forest. Draw a 3D surface plot
+    #K Program that generates multiple decision trees using the random forest. Draw a 3D surface plot
 
 
 
