@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import sklearn
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 from sklearn.ensemble import BaggingClassifier
 from sklearn.ensemble import AdaBoostClassifier
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
 
 if __name__ == "__main__":
     cancer = sklearn.datasets.load_breast_cancer() #load dataset A
@@ -32,31 +32,54 @@ if __name__ == "__main__":
                                feature_names=cancer.feature_names,  # each node should include feature name
                                class_names=cancer.target_names,
                                filled=True)
+    plt.title("Plot Tree")
     #plt.show()
 
    #I Program that generates multiple decision trees using the bagging. Draw a 2d Line plot
-    #bagging_score = BaggingClassifier(base_estimator=_, n_estimators=20, random_state=0).fit(X_train, y_train)
-
-   # plt.plot(bagging_score.n_estimators, bagging_score)
-   # plt.show()
+    #loop each time bagging score gets 1 value in estimator list
+    n_estimators = [*range(1,21,1)]
+    acc = []
+    for item in n_estimators:
+        bagging_score = BaggingClassifier(n_estimators=item).fit(X_train, y_train)
+        accuracy = bagging_score.score(X_test, y_test)
+        acc.append(accuracy)
+    fig = plt.figure(figsize=(15, 10))
+    plt.plot(n_estimators, acc)
+    plt.title("Bagging Graph I")
+    #plt.show()
 
     #J Program that generates multiple decision trees using the AdaBoost. Draw a 2D Line plot
-    ada = AdaBoostClassifier(n_estimators=20, random_state=0)
-    ada.fit(X_train, y_train)
-    y_ada = ada.score(X_train, y_train)
-    x_ada = 20 #n_estimator = 20 lol ?
+    n_estimators = [*range(1, 21, 1)]
+    acc = []
+    for item in n_estimators:
+        ada = AdaBoostClassifier(n_estimators=item, random_state=0)
+        ada.fit(X_train, y_train)
+        accuracy = ada.score(X_test, y_test)
+        acc.append(accuracy)
+    y_ada = acc
+    x_ada = n_estimators #n_estimator = 20 lol ?
+
+    fig = plt.figure(figsize=(15, 10))
     plt.plot(x_ada, y_ada)
-    plt.show()
+    plt.title("Ada 2D Line Plot")
+    #plt.show()
+
 
     #K Program that generates multiple decision trees using the random forest. Draw a 3D surface plot
-    regressor = RandomForestRegressor(n_estimators=100, random_state=0)
-    regressor.fit(X_train, y_train)
-    y_pred = regressor.predict(X_test)
-
-    z_forest_score = accuracy_score(y_test, y_pred)
-    y_axis = regressor.max_features
-    x_axis = 100 #n estimators
+    #for loop or loop
+    n_estimators = [*range(1, 100, 1)]
+    acc = []
+    for item in n_estimators:
+        classifier = RandomForestClassifier(max_depth=2, random_state=0)
+        classifier.fit((X_train), (y_train))
+        accuracy = classifier.score(X_test, y_test)
+        acc.append([accuracy])
+    z_forest_score = np.array(acc)
+    y_axis = len(cancer.feature_names)
+    x_axis = n_estimators #n estimators
     # graph
-    ax = plt.axes(project='3d')
-    ax.plot_surface(x_axis,y_axis,z_forest_score,cmap='viridis',edgecolor='none')
+    fig = plt.figure(figsize=(15, 10))
+    ax = plt.axes(projection='3d')
+    ax.plot_surface(x_axis, y_axis, z_forest_score, cmap='viridis', edgecolor='none')
+    plt.title("3D Graph")
     plt.show()
