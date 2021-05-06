@@ -6,6 +6,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 from sklearn.ensemble import BaggingClassifier
+from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import RandomForestRegressor
 
 if __name__ == "__main__":
@@ -28,20 +29,34 @@ if __name__ == "__main__":
     #H Visualize the tree with plot_tree
     fig = plt.figure(figsize=(15, 10))
     _ = sklearn.tree.plot_tree(clf,
-                       feature_names=cancer.feature_names, #each node should include feature name
-                       class_names=cancer.target_names,
-                       filled=True)
-  #  plt.show()
+                               feature_names=cancer.feature_names,  # each node should include feature name
+                               class_names=cancer.target_names,
+                               filled=True)
+    #plt.show()
 
-    #I Program that generates multiple decision trees using the bagging. Draw a 2d Line plot
-   # bagging_score = BaggingClassifier(base_estimator=clf, n_estimators=100, random_state=0).fit(X_train, y_train)
+   #I Program that generates multiple decision trees using the bagging. Draw a 2d Line plot
+    #bagging_score = BaggingClassifier(base_estimator=_, n_estimators=20, random_state=0).fit(X_train, y_train)
+
    # plt.plot(bagging_score.n_estimators, bagging_score)
    # plt.show()
 
     #J Program that generates multiple decision trees using the AdaBoost. Draw a 2D Line plot
-
+    ada = AdaBoostClassifier(n_estimators=20, random_state=0)
+    ada.fit(X_train, y_train)
+    y_ada = ada.score(X_train, y_train)
+    x_ada = 20 #n_estimator = 20 lol ?
+    plt.plot(x_ada, y_ada)
+    plt.show()
 
     #K Program that generates multiple decision trees using the random forest. Draw a 3D surface plot
+    regressor = RandomForestRegressor(n_estimators=100, random_state=0)
+    regressor.fit(X_train, y_train)
+    y_pred = regressor.predict(X_test)
 
-
-
+    z_forest_score = accuracy_score(y_test, y_pred)
+    y_axis = regressor.max_features
+    x_axis = 100 #n estimators
+    # graph
+    ax = plt.axes(project='3d')
+    ax.plot_surface(x_axis,y_axis,z_forest_score,cmap='viridis',edgecolor='none')
+    plt.show()
